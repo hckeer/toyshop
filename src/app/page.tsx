@@ -20,6 +20,9 @@ export default function HomePage() {
       {/* Featured 3D Void Collection */}
       <FeaturedShowcase />
 
+      {/* Spacer to separate the full-screen void from the footer */}
+      <div className="w-full h-32 md:h-48" style={{ background: "#06080F" }} />
+
       {/* Footer */}
       <Footer />
     </>
