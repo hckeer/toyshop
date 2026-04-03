@@ -1,173 +1,224 @@
 "use client";
 
-import { motion } from "framer-motion";
-
-// Footer component with updated spacing
+// Footer component — premium layout with generous spacing
 export default function Footer() {
+  const navLinks: [string, string][][] = [
+    [
+      ["Overview", "#overview"],
+      ["Technology", "#technology"],
+      ["Specs", "#power"],
+    ],
+    [
+      ["All Products", "/products"],
+      ["Catalogue", "/products"],
+      ["Accessories", "/products"],
+    ],
+    [
+      ["rctoysnepal.com", "https://rctoysnepal.com"],
+      ["9841194605", "tel:+9779841194605"],
+      ["rctoysnepal@gmail.com", "mailto:rctoysnepal@gmail.com"],
+    ],
+  ];
+
+  const headings = ["Explore", "Shop", "Contact"];
+
   return (
     <footer
-      className="relative py-48 pt-56 px-8 md:px-16 z-20"
       style={{
         background: "#08090C",
-        borderTop: "1px solid rgba(255,255,255,0.1)",
+        borderTop: "1px solid rgba(255, 45, 0, 0.2)",
+        position: "relative",
+        zIndex: 20,
+        minHeight: "320px",
       }}
     >
       {/* Glow line at top */}
       <div
-        className="absolute top-0 left-1/2 -translate-x-1/2"
         style={{
+          position: "absolute",
+          top: 0,
+          left: "50%",
+          transform: "translateX(-50%)",
           width: "40%",
           height: "1px",
-          background: "linear-gradient(90deg, transparent, rgba(255,45,0,0.8), rgba(255,140,0,0.6), transparent)",
+          background:
+            "linear-gradient(90deg, transparent, rgba(255,45,0,0.8), rgba(255,140,0,0.6), transparent)",
           boxShadow: "0 0 20px rgba(255,45,0,0.5)",
         }}
       />
 
-      <div className="w-full px-8 md:px-12 lg:px-16">
-        <div className="flex justify-between items-start mb-32 mt-24">
-          {/* Brand - Left Side */}
-          <div className="flex flex-col gap-6 max-w-sm mt-20 ml-4">
+      {/* Outer wrapper */}
+      <div
+        style={{
+          maxWidth: "1280px",
+          margin: "0 auto",
+          paddingTop: "80px",
+          paddingBottom: "48px",
+          paddingLeft: "40px",
+          paddingRight: "40px",
+        }}
+      >
+        {/* Main grid: brand + 3 link columns */}
+        <div
+          className="footer-grid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "2fr 1fr 1fr 1fr",
+            gap: "48px",
+            alignItems: "start",
+          }}
+        >
+          {/* Brand block */}
+          <div
+            style={{
+              paddingRight: "60px",
+              maxWidth: "280px",
+            }}
+          >
             <span
-              className="font-heading text-4xl font-semibold"
-              style={{ letterSpacing: "0.06em" }}
+              className="font-heading"
+              style={{
+                fontSize: "2rem",
+                fontWeight: 600,
+                letterSpacing: "0.06em",
+                display: "block",
+              }}
             >
               <span style={{ color: "#FF2D00" }}>RC</span>
-              <span className="text-white"> TOYS</span>
-              <span className="text-white/50"> NEPAL</span>
+              <span style={{ color: "#fff" }}> TOYS</span>
+              <span style={{ color: "rgba(255,255,255,0.5)" }}> NEPAL</span>
             </span>
+
             <p
-              className="font-body text-lg"
-              style={{ color: "rgba(255,255,255,0.6)", lineHeight: 1.8 }}
+              className="font-body"
+              style={{
+                marginTop: "12px",
+                color: "rgba(255,255,255,0.6)",
+                fontSize: "15px",
+                lineHeight: 1.6,
+              }}
             >
               Kathmandu&rsquo;s home of Radio Control since day one. Cars,
               drones, trucks, and pro-grade builds.
             </p>
           </div>
 
-          {/* Links Section - Right Most Edge with spacing above */}
-          <div className="pt-20 pr-14 mr-14 mt-16">
-            <div className="grid grid-cols-3 gap-12 sm:gap-16 lg:gap-24">
-              {/* Explore Links */}
-              <div className="flex flex-col gap-5">
-                <span
-                  className="font-body text-base uppercase tracking-widest font-semibold mb-1"
-                  style={{ color: "rgba(255,140,0,0.9)" }}
-                >
-                  Explore
-                </span>
-                {[
-                  ["Overview", "#overview"],
-                  ["Technology", "#technology"],
-                  ["Specs", "#power"],
-                ].map(([label, href]) => (
+          {/* Link columns */}
+          {headings.map((heading, colIdx) => (
+            <div key={heading}>
+              <span
+                className="font-body"
+                style={{
+                  display: "block",
+                  marginBottom: "24px",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.12em",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  color: "#FF2D00",
+                }}
+              >
+                {heading}
+              </span>
+
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                {navLinks[colIdx].map(([label, href]) => (
                   <a
                     key={label}
                     href={href}
-                    className="font-body text-lg transition-colors"
-                    style={{ color: "rgba(255,255,255,0.6)" }}
+                    className="footer-link font-body"
+                    style={{
+                      display: "block",
+                      marginBottom: "14px",
+                      color: "rgba(255,255,255,0.55)",
+                      fontSize: "14px",
+                      textDecoration: "none",
+                      transition: "color 0.2s",
+                    }}
                     onMouseEnter={(e) =>
-                      ((e.target as HTMLAnchorElement).style.color = "rgba(255,255,255,1)")
+                      ((e.currentTarget as HTMLAnchorElement).style.color =
+                        "#ffffff")
                     }
                     onMouseLeave={(e) =>
-                      ((e.target as HTMLAnchorElement).style.color = "rgba(255,255,255,0.6)")
+                      ((e.currentTarget as HTMLAnchorElement).style.color =
+                        "rgba(255,255,255,0.55)")
                     }
                   >
                     {label}
                   </a>
                 ))}
-              </div>
 
-              {/* Shop Links */}
-              <div className="flex flex-col gap-5">
-                <span
-                  className="font-body text-base uppercase tracking-widest font-semibold mb-1"
-                  style={{ color: "rgba(255,140,0,0.9)" }}
-                >
-                  Shop
-                </span>
-                {[
-                  ["All Products", "/products"],
-                  ["Catalogue", "/products"],
-                  ["Accessories", "/products"],
-                ].map(([label, href]) => (
-                  <a
-                    key={label}
-                    href={href}
-                    className="font-body text-lg transition-colors"
-                    style={{ color: "rgba(255,255,255,0.6)" }}
-                    onMouseEnter={(e) =>
-                      ((e.target as HTMLAnchorElement).style.color = "rgba(255,255,255,1)")
-                    }
-                    onMouseLeave={(e) =>
-                      ((e.target as HTMLAnchorElement).style.color = "rgba(255,255,255,0.6)")
-                    }
+                {/* Extra location line under Contact */}
+                {colIdx === 2 && (
+                  <p
+                    className="font-body"
+                    style={{
+                      marginTop: "4px",
+                      fontSize: "13px",
+                      color: "rgba(255,255,255,0.3)",
+                      lineHeight: 1.6,
+                    }}
                   >
-                    {label}
-                  </a>
-                ))}
-              </div>
-
-              {/* Contact */}
-              <div className="flex flex-col gap-5">
-                <span
-                  className="font-body text-base uppercase tracking-widest font-semibold mb-1"
-                  style={{ color: "rgba(255,140,0,0.9)" }}
-                >
-                  Contact
-                </span>
-                {[
-                  ["rctoysnepal.com", "https://rctoysnepal.com"],
-                  ["9841194605", "tel:+9779841194605"],
-                  ["rctoysnepal@gmail.com", "mailto:rctoysnepal@gmail.com"],
-                ].map(([text, href]) => (
-                  <a
-                    key={text}
-                    href={href}
-                    className="font-body text-lg transition-colors"
-                    style={{ color: "rgba(255,255,255,0.7)" }}
-                    onMouseEnter={(e) =>
-                      ((e.target as HTMLAnchorElement).style.color = "rgba(255,255,255,1)")
-                    }
-                    onMouseLeave={(e) =>
-                      ((e.target as HTMLAnchorElement).style.color = "rgba(255,255,255,0.7)")
-                    }
-                  >
-                    {text}
-                  </a>
-                ))}
-                <p
-                  className="font-body text-base mt-2 whitespace-nowrap"
-                  style={{ color: "rgba(255,255,255,0.4)", lineHeight: 1.6 }}
-                >
-                  Kathmandu &amp; Lalitpur
-                </p>
+                    Kathmandu &amp; Lalitpur
+                  </p>
+                )}
               </div>
             </div>
-          </div>
+          ))}
         </div>
 
-        {/* Divider */}
+        {/* Bottom bar */}
         <div
-          className="max-w-7xl mx-auto px-4"
-          style={{ height: "1px", background: "rgba(255,255,255,0.1)", marginBottom: "3rem" }}
-        />
-
-        {/* Bottom row */}
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 px-4 pb-8">
+          style={{
+            marginTop: "48px",
+            paddingTop: "24px",
+            borderTop: "1px solid rgba(255,255,255,0.06)",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "16px",
+            flexWrap: "wrap",
+          }}
+        >
           <p
-            className="font-body text-sm"
-            style={{ color: "rgba(255,255,255,0.4)" }}
+            className="font-body"
+            style={{ fontSize: "12px", color: "rgba(255,255,255,0.25)" }}
           >
-            &copy; {new Date().getFullYear()} RC Toys Nepal. All rights reserved.
+            &copy; {new Date().getFullYear()} RC Toys Nepal. All rights
+            reserved.
           </p>
           <p
-            className="font-body text-sm"
-            style={{ color: "rgba(255,255,255,0.3)" }}
+            className="font-body"
+            style={{ fontSize: "12px", color: "rgba(255,255,255,0.2)" }}
           >
             Made with precision in Nepal 🇳🇵
           </p>
         </div>
       </div>
+
+      {/* Responsive overrides via a style tag */}
+      <style>{`
+        @media (max-width: 1023px) {
+          .footer-grid {
+            grid-template-columns: 1fr 1fr !important;
+          }
+          .footer-grid > div:first-child {
+            grid-column: 1 / -1;
+            max-width: 100% !important;
+            padding-right: 0 !important;
+            margin-bottom: 32px;
+          }
+        }
+        @media (max-width: 639px) {
+          .footer-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .footer-grid > div {
+            margin-bottom: 40px;
+          }
+        }
+      `}</style>
     </footer>
   );
 }
