@@ -33,6 +33,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# Local setup docs that may contain real credentials/values
+ADMIN_SETUP.md
+
 # vercel
 .vercel
 
