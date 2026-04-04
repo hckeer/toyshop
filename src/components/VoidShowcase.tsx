@@ -17,14 +17,29 @@ function ProductRenderer({ product, isHovered }: { product: RCProduct; isHovered
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
   const tRef = useRef(0);
+  const productImgRef = useRef<HTMLImageElement | null>(null);
+  const imgLoadedRef = useRef(false);
 
-  const getCategoryEmoji = (cat: string) => {
-    const map: Record<string, string> = {
-      "RC Cars": "🏎", "Trucks & Crawlers": "🚙", "Drones": "🚁",
-      "Boats": "⛵", "Parts": "⚙", "Accessories": "🎒",
+  // Load real product image whenever imageSrc changes
+  useEffect(() => {
+    imgLoadedRef.current = false;
+    productImgRef.current = null;
+
+    const src = product.imageSrc;
+    if (!src) return;
+
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      productImgRef.current = img;
+      imgLoadedRef.current = true;
     };
-    return map[cat] || "🚗";
-  };
+    img.onerror = () => {
+      imgLoadedRef.current = false;
+      productImgRef.current = null;
+    };
+    img.src = src;
+  }, [product.imageSrc]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -58,12 +73,36 @@ function ProductRenderer({ product, isHovered }: { product: RCProduct; isHovered
         ctx.fillRect(0, 0, 600, 520);
       }
 
-      // Category-specific product body
+      // Product body — real image if available, else category illustration
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate((hoverTiltX * Math.PI) / 180);
 
-      drawProductBody(ctx, product, tint, t);
+      if (imgLoadedRef.current && productImgRef.current) {
+        const img = productImgRef.current;
+        const maxW = 390;
+        const maxH = 310;
+        const imgAspect = img.naturalWidth / img.naturalHeight;
+        let drawW = maxW;
+        let drawH = maxW / imgAspect;
+        if (drawH > maxH) {
+          drawH = maxH;
+          drawW = maxH * imgAspect;
+        }
+        const drawX = -drawW / 2;
+        const drawY = -drawH / 2;
+
+        // Soft ambient glow behind the photo
+        const glow = ctx.createRadialGradient(0, 0, 20, 0, 0, Math.max(drawW, drawH) * 0.75);
+        glow.addColorStop(0, `${tint}30`);
+        glow.addColorStop(1, "transparent");
+        ctx.fillStyle = glow;
+        ctx.fillRect(drawX - 50, drawY - 50, drawW + 100, drawH + 100);
+
+        ctx.drawImage(img, drawX, drawY, drawW, drawH);
+      } else {
+        drawProductBody(ctx, product, tint, t);
+      }
 
       ctx.restore();
 

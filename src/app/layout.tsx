@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
-import { Barlow_Condensed, Inter } from "next/font/google";
+import { Barlow_Condensed, Inter, Bebas_Neue } from "next/font/google";
 import "./globals.css";
+import Providers from "@/components/Providers";
 
 const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-heading",
+  display: "swap",
+});
+
+const bebasNeue = Bebas_Neue({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-bebas",
   display: "swap",
 });
 
@@ -41,8 +49,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${barlowCondensed.variable} ${inter.variable}`}>
-      <body className="bg-[#050505] text-white antialiased">{children}</body>
+    <html lang="en" className={`${barlowCondensed.variable} ${bebasNeue.variable} ${inter.variable}`}>
+      <body className="bg-[#050505] text-white antialiased">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

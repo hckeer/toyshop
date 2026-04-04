@@ -2,8 +2,10 @@ import Navbar from "@/components/Navbar";
 import ScrollStory from "@/components/ScrollStory";
 import FeaturedShowcase from "@/components/FeaturedShowcase";
 import Footer from "@/components/Footer";
+import { getFeaturedProducts } from "@/lib/actions";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const featuredProducts = await getFeaturedProducts();
   return (
     <>
       {/* Noise texture overlay for premium depth */}
@@ -18,7 +20,7 @@ export default function HomePage() {
       </main>
 
       {/* Featured 3D Void Collection */}
-      <FeaturedShowcase />
+      <FeaturedShowcase products={featuredProducts} />
 
       {/* Spacer to separate the full-screen void from the footer */}
       <div className="w-full h-32 md:h-48" style={{ background: "#06080F" }} />
