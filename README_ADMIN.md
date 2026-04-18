@@ -91,7 +91,7 @@ A complete, production-ready admin panel for RC Toys Nepal with the following fe
 - `src/lib/supabase.ts` - Supabase client setup
 - `src/lib/actions.ts` - Server actions for CRUD operations
 - `src/lib/cloudinary.ts` - Image upload utilities
-- `src/middleware.ts` - Route protection
+- `src/proxy.ts` - Route protection
 - `src/types/next-auth.d.ts` - TypeScript type augmentation
 - `.env.local` - Environment variables
 - `supabase-schema.sql` - Database schema

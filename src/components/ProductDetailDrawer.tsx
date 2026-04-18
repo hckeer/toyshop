@@ -13,6 +13,7 @@ interface ProductDetailDrawerProps {
     inTheBox?: string[];
     allImages?: string[];
     productId?: string;
+    rawSpecs?: { name: string; value: string }[];
   };
   isOpen: boolean;
   onClose: () => void;
@@ -44,7 +45,7 @@ export default function ProductDetailDrawer({
 
   // Parse specsString back into pairs if needed, or use rawSpecs
   const specPairs: { name: string; value: string }[] =
-    (product as any).rawSpecs ||
+    product.rawSpecs ||
     (product.specs
       ? product.specs
           .split(" · ")
@@ -72,11 +73,11 @@ export default function ProductDetailDrawer({
           />
 
           {/* Drawer */}
-          <motion.aside
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            <motion.aside
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as const }}
             style={{
               position: "fixed",
               top: 0,
@@ -324,7 +325,7 @@ export default function ProductDetailDrawer({
               </div>
 
               {/* Description */}
-              {(product as any).fullDescription && (
+              {product.fullDescription && (
                 <p
                   className="font-body"
                   style={{
@@ -334,7 +335,7 @@ export default function ProductDetailDrawer({
                     marginBottom: "1.5rem",
                   }}
                 >
-                  {(product as any).fullDescription}
+                  {product.fullDescription}
                 </p>
               )}
 
@@ -399,7 +400,7 @@ export default function ProductDetailDrawer({
               )}
 
               {/* In The Box */}
-              {(product as any).inTheBox?.length > 0 && (
+              {product.inTheBox?.length ? (
                 <div style={{ marginBottom: "1.5rem" }}>
                   <p
                     className="font-body"
@@ -415,7 +416,7 @@ export default function ProductDetailDrawer({
                     In The Box
                   </p>
                   <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                    {(product as any).inTheBox.map((item: string, i: number) => (
+                    {product.inTheBox.map((item, i) => (
                       <li
                         key={i}
                         className="font-body"
@@ -454,7 +455,7 @@ export default function ProductDetailDrawer({
                     ))}
                   </ul>
                 </div>
-              )}
+              ) : null}
 
               {/* Stock */}
               <div

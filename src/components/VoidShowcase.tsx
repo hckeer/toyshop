@@ -624,7 +624,7 @@ function CopyBlock({ product, visible }: { product: RCProduct; visible: boolean 
     visible: (delay: number) => ({
       opacity: 1,
       x: 0,
-      transition: { duration: 0.6, delay: delay * 0.08, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 0.6, delay: delay * 0.08, ease: [0.16, 1, 0.3, 1] as const },
     }),
     exit: { opacity: 0, x: -20, transition: { duration: 0.3 } },
   };
@@ -720,22 +720,22 @@ const productVariants = {
     initial: { x: -200, rotateY: -25, opacity: 0, scale: 1.1 },
     animate: {
       x: 0, rotateY: 0, opacity: 1, scale: 1,
-      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
     },
     exit: {
       x: 200, rotateY: 20, opacity: 0, scale: 0.9,
-      transition: { duration: 0.55, ease: [0.4, 0, 0.2, 1] },
+      transition: { duration: 0.55, ease: [0.4, 0, 0.2, 1] as const },
     },
   },
   enterRight: {
     initial: { x: 200, rotateY: 25, opacity: 0, scale: 1.1 },
     animate: {
       x: 0, rotateY: 0, opacity: 1, scale: 1,
-      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
     },
     exit: {
       x: -200, rotateY: -20, opacity: 0, scale: 0.9,
-      transition: { duration: 0.55, ease: [0.4, 0, 0.2, 1] },
+      transition: { duration: 0.55, ease: [0.4, 0, 0.2, 1] as const },
     },
   },
 };
@@ -762,7 +762,7 @@ function IntroOverlay({ onDismiss }: { onDismiss: () => void }) {
       {/* Main title */}
       <motion.h1
         initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0, transition: { delay: 0.4, duration: 0.7, ease: [0.16, 1, 0.3, 1] } }}
+        animate={{ opacity: 1, y: 0, transition: { delay: 0.4, duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } }}
         className="font-heading"
         style={{
           fontSize: "clamp(4rem, 14vw, 11rem)",
@@ -884,7 +884,13 @@ function EdgeArrow({
 
 // ── MAIN VOID SHOWCASE ───────────────────────────────────
 interface VoidShowcaseProps {
-  products: RCProduct[];
+  products: Array<RCProduct & {
+    productId?: string;
+    fullDescription?: string;
+    inTheBox?: string[];
+    allImages?: string[];
+    rawSpecs?: { name: string; value: string }[];
+  }>;
   showCTA?: boolean; // home page shows CTA, products page doesn't
   onViewAll?: () => void;
 }
@@ -1231,11 +1237,11 @@ export default function VoidShowcase({ products, showCTA = false, onViewAll }: V
       <ProductDetailDrawer
         product={{
           ...product,
-          productId: (product as any).productId,
-          fullDescription: (product as any).fullDescription,
-          inTheBox: (product as any).inTheBox,
-          allImages: (product as any).allImages,
-          rawSpecs: (product as any).rawSpecs,
+          productId: product.productId,
+          fullDescription: product.fullDescription,
+          inTheBox: product.inTheBox,
+          allImages: product.allImages,
+          rawSpecs: product.rawSpecs,
         }}
         isOpen={detailDrawerOpen}
         onClose={() => setDetailDrawerOpen(false)}
