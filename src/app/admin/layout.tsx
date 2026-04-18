@@ -4,6 +4,12 @@ import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+const NAV_LINKS = [
+  { href: '/admin/dashboard', label: 'Dashboard' },
+  { href: '/admin/products', label: 'Products' },
+  { href: '/admin/orders', label: 'Orders' },
+]
+
 export default function AdminLayout({
   children,
 }: {
@@ -49,6 +55,28 @@ export default function AdminLayout({
               Sign Out
             </button>
           </div>
+        </div>
+
+        {/* Sub-navigation */}
+        <div className="max-w-[1920px] mx-auto px-6 pb-3 flex items-center gap-1">
+          {NAV_LINKS.map((link) => {
+            const isActive = pathname.startsWith(link.href)
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm px-4 py-1.5 rounded-full transition-all duration-200"
+                style={{
+                  background: isActive ? 'rgba(255,45,0,0.15)' : 'transparent',
+                  color: isActive ? '#FF5533' : 'rgba(255,255,255,0.4)',
+                  border: isActive ? '1px solid rgba(255,45,0,0.3)' : '1px solid transparent',
+                  fontWeight: isActive ? 600 : 400,
+                }}
+              >
+                {link.label}
+              </Link>
+            )
+          })}
         </div>
       </nav>
 

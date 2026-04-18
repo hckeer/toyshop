@@ -133,6 +133,13 @@ export default function ProductsClientPage({ products }: ProductsClientPageProps
 
       return {
         id: p.slug,
+        // Extra fields for drawer / modal
+        productId: p.id,
+        fullDescription: p.full_description || '',
+        inTheBox: p.in_the_box,
+        allImages: p.images,
+        rawSpecs: p.specs,
+        // Standard VoidShowcase fields
         name: p.name,
         category: (p.category === 'RC Trucks & Crawlers' ? 'Trucks & Crawlers' : 
                   p.category === 'RC Drones' ? 'Drones' :

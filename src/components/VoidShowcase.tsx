@@ -5,41 +5,22 @@ import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import type { RCProduct } from "@/lib/products";
 import { formatPrice } from "@/lib/products";
+import OrderModal from "./OrderModal";
+import ProductDetailDrawer from "./ProductDetailDrawer";
 
 const StarField = dynamic(() => import("./StarField"), { ssr: false });
 const AmbientFragments = dynamic(() => import("./AmbientFragments"), { ssr: false });
 
 // ── PRODUCT CANVAS RENDERER ──────────────────────────────
-// Draws the product as a photorealistic 3D-style illustration
-// Since we don't have real product photos with transparent backgrounds,
-// this renders a stylized product card composited into the void
+// Canvas handles ambient glow + floor effects.
+// A real <img> element is layered on top for the actual product photo,
+// bypassing canvas CORS restrictions with Cloudinary.
 function ProductRenderer({ product, isHovered }: { product: RCProduct; isHovered: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
   const tRef = useRef(0);
-  const productImgRef = useRef<HTMLImageElement | null>(null);
-  const imgLoadedRef = useRef(false);
-
-  // Load real product image whenever imageSrc changes
-  useEffect(() => {
-    imgLoadedRef.current = false;
-    productImgRef.current = null;
-
-    const src = product.imageSrc;
-    if (!src) return;
-
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => {
-      productImgRef.current = img;
-      imgLoadedRef.current = true;
-    };
-    img.onerror = () => {
-      imgLoadedRef.current = false;
-      productImgRef.current = null;
-    };
-    img.src = src;
-  }, [product.imageSrc]);
+  const hasImage = !!(product as any).imageSrc || !!(product as any).image;
+  const imageSrc = (product as any).imageSrc || (product as any).image || "";
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -56,11 +37,10 @@ function ProductRenderer({ product, isHovered }: { product: RCProduct; isHovered
       tRef.current += 0.02;
       const t = tRef.current;
       const floatY = Math.sin(t * 0.8) * (isHovered ? 6 : 3);
-      const hoverTiltX = isHovered ? Math.sin(t * 0.3) * 3 : 0; // subtle X oscillation on hover
+      const hoverTiltX = isHovered ? Math.sin(t * 0.3) * 3 : 0;
 
       ctx.clearRect(0, 0, 600, 520);
 
-      // Draw a stylized product silhouette based on category
       const cx = 300;
       const cy = 240 + floatY;
 
@@ -73,40 +53,26 @@ function ProductRenderer({ product, isHovered }: { product: RCProduct; isHovered
         ctx.fillRect(0, 0, 600, 520);
       }
 
-      // Product body — real image if available, else category illustration
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate((hoverTiltX * Math.PI) / 180);
 
-      if (imgLoadedRef.current && productImgRef.current) {
-        const img = productImgRef.current;
-        const maxW = 390;
-        const maxH = 310;
-        const imgAspect = img.naturalWidth / img.naturalHeight;
-        let drawW = maxW;
-        let drawH = maxW / imgAspect;
-        if (drawH > maxH) {
-          drawH = maxH;
-          drawW = maxH * imgAspect;
-        }
-        const drawX = -drawW / 2;
-        const drawY = -drawH / 2;
-
-        // Soft ambient glow behind the photo
-        const glow = ctx.createRadialGradient(0, 0, 20, 0, 0, Math.max(drawW, drawH) * 0.75);
-        glow.addColorStop(0, `${tint}30`);
+      if (!hasImage || !imageSrc) {
+        // No real image — draw stylised placeholder illustration
+        drawProductBody(ctx, product, tint, t);
+      } else {
+        // Real image will be shown by the <img> overlay.
+        // Draw soft ambient glow behind it on the canvas.
+        const glow = ctx.createRadialGradient(0, 0, 20, 0, 0, 200);
+        glow.addColorStop(0, `${tint}28`);
         glow.addColorStop(1, "transparent");
         ctx.fillStyle = glow;
-        ctx.fillRect(drawX - 50, drawY - 50, drawW + 100, drawH + 100);
-
-        ctx.drawImage(img, drawX, drawY, drawW, drawH);
-      } else {
-        drawProductBody(ctx, product, tint, t);
+        ctx.fillRect(-220, -180, 440, 360);
       }
 
       ctx.restore();
 
-      // Reflective floor
+      // Reflective floor shadow
       drawFloor(ctx, cx, cy + 160, product, tint);
 
       animRef.current = requestAnimationFrame(drawFrame);
@@ -114,18 +80,82 @@ function ProductRenderer({ product, isHovered }: { product: RCProduct; isHovered
 
     animRef.current = requestAnimationFrame(drawFrame);
     return () => cancelAnimationFrame(animRef.current);
-  }, [product, isHovered]);
+  }, [product, isHovered, hasImage, imageSrc]);
+
+  // Floating animation values (mirrors canvas floatY)
+  const floatAnim = {
+    y: [0, -8, 0],
+    transition: {
+      duration: 3.5,
+      repeat: Infinity,
+      ease: "easeInOut" as const,
+    },
+  };
 
   return (
-    <canvas
-      ref={canvasRef}
-      width={600}
-      height={520}
-      style={{ width: "100%", height: "100%", display: "block" }}
-      aria-label={product.name}
-    />
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      {/* Canvas: ambient glow + floor reflection */}
+      <canvas
+        ref={canvasRef}
+        width={600}
+        height={520}
+        style={{ width: "100%", height: "100%", display: "block" }}
+        aria-hidden={hasImage && !!imageSrc}
+        aria-label={!hasImage ? product.name : undefined}
+      />
+
+      {/* Real product image overlay */}
+      {imageSrc && (
+        <motion.div
+          animate={floatAnim}
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            pointerEvents: "none",
+          }}
+        >
+          {/* Product image in a premium dark card */}
+          <div
+            style={{
+              maxWidth: "75%",
+              maxHeight: "68%",
+              borderRadius: 16,
+              overflow: "hidden",
+              background: "rgba(8, 10, 18, 0.72)",
+              backdropFilter: "blur(2px)",
+              border: `1px solid ${product.ambientTint}22`,
+              boxShadow: `0 24px 80px ${product.ambientTint}40, 0 8px 32px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06)`,
+              padding: "0.75rem",
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imageSrc}
+              alt={product.name}
+              style={{
+                width: "100%",
+                height: "100%",
+                maxWidth: "360px",
+                maxHeight: "260px",
+                objectFit: "contain",
+                display: "block",
+                borderRadius: 8,
+              }}
+              onError={(e) => {
+                // Hide broken image — canvas placeholder will show
+                (e.currentTarget.parentElement as HTMLElement).style.display = "none";
+              }}
+            />
+          </div>
+        </motion.div>
+      )}
+    </div>
   );
 }
+
 
 function drawProductBody(
   ctx: CanvasRenderingContext2D,
@@ -861,6 +891,74 @@ interface VoidShowcaseProps {
 
 type Direction = "left" | "right";
 
+// ── ACTION BUTTONS (Buy Now + Details) ───────────────────
+function ProductActionButtons({
+  product,
+  onBuyNow,
+  onDetails,
+}: {
+  product: RCProduct & { productId?: string };
+  onBuyNow: () => void;
+  onDetails: () => void;
+}) {
+  return (
+    <motion.div
+      key={product.id + "-actions"}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 8 }}
+      transition={{ duration: 0.5, delay: 0.3 }}
+      style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: "1.25rem" }}
+    >
+      <button
+        id={`buy-now-${product.id}`}
+        onClick={onBuyNow}
+        className="font-body"
+        style={{
+          background: "linear-gradient(135deg, #FF2D00, #FF8C00)",
+          border: "none",
+          borderRadius: 999,
+          padding: "0.65rem 1.35rem",
+          color: "#fff",
+          fontSize: "0.8rem",
+          fontWeight: 700,
+          letterSpacing: "0.07em",
+          cursor: "pointer",
+          boxShadow: "0 4px 18px rgba(255,45,0,0.35)",
+          transition: "opacity 0.2s, transform 0.15s",
+          textTransform: "uppercase",
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.88"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0)"; }}
+      >
+        Buy Now
+      </button>
+      <button
+        id={`details-${product.id}`}
+        onClick={onDetails}
+        className="font-body"
+        style={{
+          background: "rgba(255,255,255,0.06)",
+          border: "1px solid rgba(255,255,255,0.12)",
+          borderRadius: 999,
+          padding: "0.65rem 1.35rem",
+          color: "rgba(255,255,255,0.7)",
+          fontSize: "0.8rem",
+          fontWeight: 600,
+          letterSpacing: "0.06em",
+          cursor: "pointer",
+          transition: "background 0.2s, color 0.2s, transform 0.15s",
+          textTransform: "uppercase",
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "rgba(255,255,255,0.95)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "rgba(255,255,255,0.7)"; e.currentTarget.style.transform = "translateY(0)"; }}
+      >
+        Details →
+      </button>
+    </motion.div>
+  );
+}
+
 export default function VoidShowcase({ products, showCTA = false, onViewAll }: VoidShowcaseProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState<Direction>("right");
@@ -869,6 +967,8 @@ export default function VoidShowcase({ products, showCTA = false, onViewAll }: V
   const [isHovered, setIsHovered] = useState(false);
   const [productsSeen, setProductsSeen] = useState(0);
   const [copyVisible, setCopyVisible] = useState(true);
+  const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   const navigate = useCallback(
@@ -1005,38 +1105,37 @@ export default function VoidShowcase({ products, showCTA = false, onViewAll }: V
       {!showIntro && (
         <div
           className="absolute bottom-0 left-0 z-20 p-8 md:p-12"
-          style={{ maxWidth: "min(480px, 45vw)" }}
+          style={{ maxWidth: "min(520px, 48vw)" }}
         >
           <CopyBlock product={product} visible={copyVisible} />
-          {/* CTA (home page only, shown after 2+ products seen) */}
-          {showCTA && productsSeen >= 2 && (
+
+          {/* Action buttons — always shown after intro (home page + products page) */}
+          <AnimatePresence>
+            {copyVisible && (
+              <ProductActionButtons
+                product={product}
+                onBuyNow={() => setOrderModalOpen(true)}
+                onDetails={() => setDetailDrawerOpen(true)}
+              />
+            )}
+          </AnimatePresence>
+
+          {/* View All link (home page only) */}
+          {showCTA && onViewAll && productsSeen >= 2 && (
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col gap-2 mt-5"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-3"
             >
-              <a
-                href="#"
-                className="font-body inline-flex items-center justify-center w-fit px-6 py-3 text-sm font-medium tracking-wide text-white rounded-full transition-all duration-300"
-                style={{
-                  background: "linear-gradient(135deg, #FF2D00, #FF8C00)",
-                  boxShadow: "0 6px 24px rgba(255,45,0,0.3)",
-                  letterSpacing: "0.04em",
-                }}
+              <button
+                onClick={onViewAll}
+                className="font-body text-xs text-left transition-colors"
+                style={{ color: "rgba(255,255,255,0.3)", letterSpacing: "0.08em" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.65)")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.3)")}
               >
-                Shop Now
-              </a>
-              {onViewAll && (
-                <button
-                  onClick={onViewAll}
-                  className="font-body text-xs text-left transition-colors pt-1"
-                  style={{ color: "rgba(255,255,255,0.3)", letterSpacing: "0.08em" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.65)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.3)")}
-                >
-                  View Full Collection →
-                </button>
-              )}
+                View Full Collection →
+              </button>
             </motion.div>
           )}
         </div>
@@ -1116,6 +1215,31 @@ export default function VoidShowcase({ products, showCTA = false, onViewAll }: V
           background: "linear-gradient(to top, rgba(6,8,15,0.8), transparent)",
         }}
         aria-hidden="true"
+      />
+
+      {/* ── ORDER MODAL ── */}
+      <OrderModal
+        isOpen={orderModalOpen}
+        onClose={() => setOrderModalOpen(false)}
+        productName={product.name}
+        productId={(product as any).productId}
+        productSlug={product.id}
+        productPrice={product.priceNPR}
+      />
+
+      {/* ── PRODUCT DETAIL DRAWER ── */}
+      <ProductDetailDrawer
+        product={{
+          ...product,
+          productId: (product as any).productId,
+          fullDescription: (product as any).fullDescription,
+          inTheBox: (product as any).inTheBox,
+          allImages: (product as any).allImages,
+          rawSpecs: (product as any).rawSpecs,
+        }}
+        isOpen={detailDrawerOpen}
+        onClose={() => setDetailDrawerOpen(false)}
+        onBuyNow={() => { setDetailDrawerOpen(false); setOrderModalOpen(true); }}
       />
     </div>
   );
