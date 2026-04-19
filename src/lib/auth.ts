@@ -1,5 +1,6 @@
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import bcrypt from 'bcryptjs'
 
 function normalizeEnvValue(value?: string) {
   if (!value) return ''
@@ -24,9 +25,10 @@ export const authOptions: NextAuthOptions = {
 
         const adminEmail = normalizeEnvValue(process.env.ADMIN_EMAIL).toLowerCase()
         const adminPassword = normalizeEnvValue(process.env.ADMIN_PASSWORD)
+        const adminPasswordHash = normalizeEnvValue(process.env.ADMIN_PASSWORD_HASH)
         const providedEmail = credentials.email.trim().toLowerCase()
 
-        if (!adminEmail || !adminPassword) {
+        if (!adminEmail || (!adminPassword && !adminPasswordHash)) {
           console.error('Admin auth env vars are not set correctly')
           return null
         }
@@ -35,7 +37,15 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        const passwordValid = credentials.password === adminPassword
+        let passwordValid = false
+        if (adminPassword) {
+          passwordValid = credentials.password === adminPassword
+        } else if (/^\$2[aby]\$\d{2}\$/.test(adminPasswordHash)) {
+          passwordValid = await bcrypt.compare(credentials.password, adminPasswordHash)
+        } else {
+          // Backward compatibility for environments that still store plain password in ADMIN_PASSWORD_HASH.
+          passwordValid = credentials.password === adminPasswordHash
+        }
 
         if (!passwordValid) {
           return null
