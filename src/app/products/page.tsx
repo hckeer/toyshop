@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import ProductsClientPage from "@/components/ProductsClientPage";
 import { getActiveProducts } from "@/lib/actions";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "RC Toys Nepal — Shop All Products",
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProductsPage() {
+  await connection();
   const products = await getActiveProducts();
 
   return (

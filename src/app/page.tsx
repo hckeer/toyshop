@@ -3,8 +3,10 @@ import ScrollStory from "@/components/ScrollStory";
 import FeaturedShowcase from "@/components/FeaturedShowcase";
 import Footer from "@/components/Footer";
 import { getFeaturedProducts } from "@/lib/actions";
+import { connection } from "next/server";
 
 export default async function HomePage() {
+  await connection();
   const featuredProducts = await getFeaturedProducts();
   return (
     <>

@@ -89,7 +89,7 @@ const PRODUCTS = [
     short_descriptor: '1:12 Scale 4WD Climbing RC Car -- 40km/h, 100m Range',
     full_description:
       'The WLtoys 12429 is a powerful 1:12 scale 4WD off-road climber with a brushed motor and razor-sharp 2.4GHz response. Built for both smooth tarmac and rough terrain, it packs high-brightness LED headlights, a metal-reinforced chassis, and a 7.4V 1500mAh battery for 15 minutes of adrenaline-fuelled runtime. Beginner-friendly yet fast enough to impress experienced enthusiasts.',
-    regular_price: 7500,
+    regular_price: 19000,
     sale_price: null,
     specs: [
       { name: 'Scale', value: '1:12' },
@@ -115,7 +115,7 @@ const PRODUCTS = [
     short_descriptor: '2CH RTF EPP Foam Glider -- Ready to Fly Straight Out of the Box',
     full_description:
       "The Cessna 182 RC Glider is the perfect first fixed-wing aircraft. Built from lightweight EPP foam with a stable 31cm wingspan and intuitive 2-channel 2.4GHz control, it is virtually unbreakable and extremely easy to fly. Whether you are indoors or outdoors, this glider delivers a relaxing, elegant flight experience that scales from beginners to casual enthusiasts.",
-    regular_price: 4500,
+    regular_price: 10000,
     sale_price: null,
     specs: [
       { name: 'Wingspan', value: '31 cm' },
@@ -140,8 +140,8 @@ const PRODUCTS = [
     short_descriptor: '1:14 Alloy 4WD Racing RC Car -- 50km/h with LED Lights',
     full_description:
       'The WLtoys 144002 takes the legendary 144001 platform and upgrades it with a full alloy metal chassis, drift-ready suspension, and searing 50km/h top speed. The carbon brush 550 motor paired with a 7.4V 1500mAh LiPo battery delivers raw, relentless acceleration. Includes LED headlights and taillights for low-light bashes. An outstanding value in the 1:14 class.',
-    regular_price: 8500,
-    sale_price: 9500,
+    regular_price: 20000,
+    sale_price: null,
     specs: [
       { name: 'Scale', value: '1:14' },
       { name: 'Top Speed', value: '50 km/h' },
@@ -167,7 +167,7 @@ const PRODUCTS = [
     short_descriptor: '1:12 App-Controlled Off-Road Climbing Vehicle',
     full_description:
       'The MN82 H1 is a scale-detailed 1:12 remote control climbing vehicle inspired by the legendary Hummer H1. With app-controlled functionality, simulated independent suspension, and a high-torque motor, it conquers rocks, gravel, and steep inclines with ease. The realistic body panels, working lights, and 2.4GHz radio make this a collector-grade crawler at an accessible price.',
-    regular_price: 9500,
+    regular_price: 12000,
     sale_price: null,
     specs: [
       { name: 'Scale', value: '1:12' },
@@ -193,7 +193,7 @@ const PRODUCTS = [
     short_descriptor: '1:12 Scale 4WD High-Speed Rock Crawler -- 100m Range',
     full_description:
       'The MN99S blends the rugged character of a military truck with high-performance RC engineering. Its 1:12 scale body sits atop a fully independent suspension system and a high-torque 4WD drivetrain that takes on any surface. At 100m range and 2.4GHz precision, you are always in full command. Includes a 7.4V 1200mAh battery for sustained off-road sessions.',
-    regular_price: 8800,
+    regular_price: 13000,
     sale_price: null,
     specs: [
       { name: 'Scale', value: '1:12' },
@@ -244,7 +244,7 @@ const PRODUCTS = [
     short_descriptor: '1:16 Dodge-Style GT Drift Car -- Includes Extra Drift Tyres',
     full_description:
       'The JJRC Q116 Super GT is a 1:16 scale replica of the iconic Dodge muscle car, built for pure drift dominance. The kit includes two sets of tyres -- grip rubber for racing and hard plastic rings for effortless drift mode. With 2.4GHz precision and a sleek low-profile body, it is an ideal gift for boys and RC enthusiasts of all ages.',
-    regular_price: 4200,
+    regular_price: 6000,
     sale_price: null,
     specs: [
       { name: 'Scale', value: '1:16' },
@@ -268,7 +268,7 @@ const PRODUCTS = [
     short_descriptor: '1:12 Scale High-Detail RC Military Truck',
     full_description:
       'The MN128 is a full-detail 1:12 scale RC military-style truck with a realistic cab and truck bed, independent suspension, and a rugged 4WD drivetrain. Perfect for collectors and off-road hobbyists, this truck handles gravel, dirt, sand, and rocky terrain with authority. The 2.4GHz radio system ensures crisp, lag-free control at full range.',
-    regular_price: 11000,
+    regular_price: 16500,
     sale_price: null,
     specs: [
       { name: 'Scale', value: '1:12' },
@@ -292,7 +292,7 @@ const PRODUCTS = [
     short_descriptor: '1:24 Scale 6CH John Deere Style RC Tractor with Working Lights',
     full_description:
       'This 1:24 scale RC Farming Tractor brings the iconic John Deere aesthetic to life with 6-channel control, bright working LED lights, and a realistic seeder attachment. The 2.4GHz radio allows full forward, reverse, and turning control, while the included light system adds a stunning nighttime farming experience. An extraordinary gift for young RC enthusiasts and farming fans.',
-    regular_price: 3800,
+    regular_price: 9000,
     sale_price: null,
     specs: [
       { name: 'Scale', value: '1:24' },
@@ -317,8 +317,8 @@ const PRODUCTS = [
     short_descriptor: '1:16 Brushed 4WD Off-Road Monster Truck -- 40km/h, 80m Range',
     full_description:
       'The REMO 1631 is a battle-hardened 1:16 scale 4WD monster truck ready for any terrain you throw at it. Powered by a high-torque brushed motor and a 7.4V 1500mAh LiPo battery, it rips through mud, gravel, and grass at up to 40km/h. With app control, 80m range, and 25 minutes of runtime, this is one of the most capable trucks in its class.',
-    regular_price: 9800,
-    sale_price: 11500,
+    regular_price: 22000,
+    sale_price: null,
     specs: [
       { name: 'Scale', value: '1:16' },
       { name: 'Top Speed', value: '30-40 km/h' },
@@ -343,7 +343,7 @@ const PRODUCTS = [
     short_descriptor: '1:20 Scale RC Construction Wheel Loader -- Moveable Shovel',
     full_description:
       'The Double E E519 RC Wheel Loader is a premium 1:20 scale construction vehicle with a fully functional shovel that moves up, down, forward, and back. Realistic proportions, smooth controls, and sturdy build quality make this an exceptional display piece and play vehicle. Kids and collectors alike love its detailed body and satisfying shovel mechanics. USB rechargeable and ready for the job site.',
-    regular_price: 6500,
+    regular_price: 10000,
     sale_price: null,
     specs: [
       { name: 'Scale', value: '1:20' },
@@ -370,7 +370,7 @@ const PRODUCTS = [
     short_descriptor: '1:20 Scale RC Steam Roller with Demo Mode & Sound',
     full_description:
       'The Double E RC Steam Roller is a superbly detailed 1:20 scale radio-controlled construction roller with forward, reverse, left and right turns, a demo mode, and authentic construction sounds. It supports Triband frequency, allowing up to 3 units to be driven simultaneously without interference. Built-in rechargeable batteries and a USB charger make it maintenance-free. An unmissable gift for RC vehicle fans.',
-    regular_price: 5800,
+    regular_price: 10000,
     sale_price: null,
     specs: [
       { name: 'Scale', value: '1:20' },
