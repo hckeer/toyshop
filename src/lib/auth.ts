@@ -1,6 +1,13 @@
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import bcrypt from 'bcryptjs'
+
+function normalizeEnvValue(value?: string) {
+  if (!value) return ''
+  return value
+    .trim()
+    .replace(/^['"]|['"]$/g, '')
+    .replace(/\\\$/g, '$')
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -12,32 +19,23 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          console.log('Missing credentials')
           return null
         }
 
-        // Check if credentials match admin user
-        const adminEmail = process.env.ADMIN_EMAIL
-        const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH
+        const adminEmail = normalizeEnvValue(process.env.ADMIN_EMAIL).toLowerCase()
+        const adminPassword = normalizeEnvValue(process.env.ADMIN_PASSWORD)
+        const providedEmail = credentials.email.trim().toLowerCase()
 
-        console.log('Auth attempt:', {
-          providedEmail: credentials.email,
-          adminEmail,
-          hasPasswordHash: !!adminPasswordHash
-        })
-
-        if (credentials.email !== adminEmail) {
-          console.log('Email mismatch')
+        if (!adminEmail || !adminPassword) {
+          console.error('Admin auth env vars are not set correctly')
           return null
         }
 
-        // Verify password
-        const passwordValid = await bcrypt.compare(
-          credentials.password,
-          adminPasswordHash!
-        )
+        if (providedEmail !== adminEmail) {
+          return null
+        }
 
-        console.log('Password valid:', passwordValid)
+        const passwordValid = credentials.password === adminPassword
 
         if (!passwordValid) {
           return null

@@ -126,7 +126,6 @@ function LoginForm() {
           </button>
         </form>
 
-        {/* Helper text */}
         <p className="text-gray-500 text-xs text-center mt-6">
           Default credentials: admin@rctoysnepal.com / admin123
         </p>
