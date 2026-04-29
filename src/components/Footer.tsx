@@ -17,6 +17,7 @@ export default function Footer() {
       ["rctoysnepal.com", "https://rctoysnepal.com"],
       ["9841194605", "tel:+9779841194605"],
       ["rctoysnepal@gmail.com", "mailto:rctoysnepal@gmail.com"],
+      ["Google Review", "https://share.google/hsMFkrt5mAXNIEqx4"],
     ],
   ];
 
