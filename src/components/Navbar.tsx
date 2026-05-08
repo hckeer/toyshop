@@ -6,9 +6,8 @@ import { motion } from "framer-motion";
 const NAV_LINKS = [
   { label: "Overview", href: "#overview" },
   { label: "Products", href: "/products" },
-  { label: "Technology", href: "#technology" },
-  { label: "Specs", href: "#power" },
   { label: "Shop", href: "/products" },
+  { label: "About Us", href: "/about" },
 ];
 
 export default function Navbar() {
@@ -37,8 +36,8 @@ export default function Navbar() {
       }}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <a href="#" className="flex items-center gap-2 group" aria-label="RC Toys Nepal Home">
+        {/* Brand Name */}
+        <a href="/" className="flex items-center gap-2 group" aria-label="RC Toys Nepal Home">
           <span
             className="font-heading text-xl font-semibold tracking-wide"
             style={{ letterSpacing: "0.06em" }}
@@ -62,51 +61,54 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* CTA */}
-        <div className="hidden md:flex items-center">
-          <a
-            href="/products"
-            className="relative inline-flex items-center justify-center px-5 py-2 rounded-full text-sm font-medium font-body tracking-wide text-white/90 transition-all duration-300"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(255,45,0,0.12), rgba(255,140,0,0.08))",
-              boxShadow: scrolled
-                ? "0 0 0 1px rgba(255,45,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)"
-                : "0 0 0 1px rgba(255,45,0,0.25)",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.boxShadow =
-                "0 0 0 1px rgba(255,45,0,0.7), 0 0 24px rgba(255,45,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.boxShadow = scrolled
-                ? "0 0 0 1px rgba(255,45,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)"
-                : "0 0 0 1px rgba(255,45,0,0.25)";
-            }}
-          >
-            Shop Now
-          </a>
-        </div>
+        {/* Right Side Items (CTA + Mobile Menu + Logo) */}
+        <div className="flex items-center gap-4 md:gap-6">
+          {/* CTA */}
+          <div className="hidden md:flex items-center">
+            <a
+              href="/products"
+              className="relative inline-flex items-center justify-center px-5 py-2 rounded-full text-sm font-medium font-body tracking-wide text-white/90 transition-all duration-300"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(255,45,0,0.12), rgba(255,140,0,0.08))",
+                boxShadow: scrolled
+                  ? "0 0 0 1px rgba(255,45,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)"
+                  : "0 0 0 1px rgba(255,45,0,0.25)",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.boxShadow =
+                  "0 0 0 1px rgba(255,45,0,0.7), 0 0 24px rgba(255,45,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.boxShadow = scrolled
+                  ? "0 0 0 1px rgba(255,45,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)"
+                  : "0 0 0 1px rgba(255,45,0,0.25)";
+              }}
+            >
+              Shop Now
+            </a>
+          </div>
 
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden flex flex-col gap-1.5 p-2"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-        >
-          <span
-            className="block w-5 h-0.5 bg-white/70 transition-all duration-300"
-            style={{ transform: menuOpen ? "translateY(8px) rotate(45deg)" : "none" }}
-          />
-          <span
-            className="block w-5 h-0.5 bg-white/70 transition-all duration-300"
-            style={{ opacity: menuOpen ? 0 : 1 }}
-          />
-          <span
-            className="block w-5 h-0.5 bg-white/70 transition-all duration-300"
-            style={{ transform: menuOpen ? "translateY(-8px) rotate(-45deg)" : "none" }}
-          />
-        </button>
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden flex flex-col gap-1.5 p-2"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+          >
+            <span
+              className="block w-5 h-0.5 bg-white/70 transition-all duration-300"
+              style={{ transform: menuOpen ? "translateY(8px) rotate(45deg)" : "none" }}
+            />
+            <span
+              className="block w-5 h-0.5 bg-white/70 transition-all duration-300"
+              style={{ opacity: menuOpen ? 0 : 1 }}
+            />
+            <span
+              className="block w-5 h-0.5 bg-white/70 transition-all duration-300"
+              style={{ transform: menuOpen ? "translateY(-8px) rotate(-45deg)" : "none" }}
+            />
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -140,6 +142,23 @@ export default function Navbar() {
           </a>
         </div>
       </motion.div>
+
+      {/* Floating Logo touching the absolute top right edge */}
+      <a 
+        href="/" 
+        className="absolute top-2 right-2 md:top-4 md:right-4 flex items-center justify-center w-16 h-16 md:w-24 md:h-24 rounded-full p-[3px] group z-[60] shadow-[0_0_20px_rgba(255,45,0,0.5)] transition-transform duration-300 hover:scale-105" 
+        aria-label="Home"
+      >
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#FF2D00] via-[#FF8C00] to-[#FF2D00] rounded-full opacity-80 group-hover:opacity-100 transition-opacity duration-300 animate-spin" style={{ animationDuration: '4s' }}></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#FF2D00] to-[#FF8C00] rounded-full blur-[10px] opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="relative w-full h-full bg-[#06080F] rounded-full overflow-hidden flex items-center justify-center p-1">
+          <img 
+            src="/logo.png" 
+            alt="RC Toys Nepal Logo" 
+            className="w-full h-full object-cover rounded-full"
+          />
+        </div>
+      </a>
     </motion.header>
   );
 }

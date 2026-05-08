@@ -120,8 +120,8 @@ function ProductRenderer({ product, isHovered }: { product: RCProduct; isHovered
           {/* Product image in a premium dark card */}
           <div
             style={{
-              maxWidth: "75%",
-              maxHeight: "68%",
+              maxWidth: "88%",
+              maxHeight: "82%",
               borderRadius: 16,
               overflow: "hidden",
               background: "rgba(8, 10, 18, 0.72)",
@@ -138,8 +138,8 @@ function ProductRenderer({ product, isHovered }: { product: RCProduct; isHovered
               style={{
                 width: "100%",
                 height: "100%",
-                maxWidth: "360px",
-                maxHeight: "260px",
+                maxWidth: "460px",
+                maxHeight: "340px",
                 objectFit: "contain",
                 display: "block",
                 borderRadius: 8,
@@ -1080,8 +1080,8 @@ export default function VoidShowcase({ products, showCTA = false, onViewAll }: V
         <div
           className="relative"
           style={{
-            width: "min(52vw, 600px)",
-            height: "min(48vh, 520px)",
+            width: "min(64vw, 720px)",
+            height: "min(60vh, 620px)",
             marginTop: "-4vh",
           }}
           onMouseEnter={() => setIsHovered(true)}

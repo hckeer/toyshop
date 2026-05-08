@@ -5,8 +5,6 @@ export default function Footer() {
   const navLinks: [string, string][][] = [
     [
       ["Overview", "#overview"],
-      ["Technology", "#technology"],
-      ["Specs", "#power"],
     ],
     [
       ["All Products", "/products"],
@@ -16,6 +14,7 @@ export default function Footer() {
     [
       ["rctoysnepal.com", "https://rctoysnepal.com"],
       ["9841194605", "tel:+9779841194605"],
+      ["9851196739", "tel:+9779851196739"],
       ["rctoysnepal@gmail.com", "mailto:rctoysnepal@gmail.com"],
       ["Google Review", "https://share.google/hsMFkrt5mAXNIEqx4"],
     ],
@@ -151,17 +150,31 @@ export default function Footer() {
 
                 {/* Extra location line under Contact */}
                 {colIdx === 2 && (
-                  <p
+                  <a
+                    href="https://maps.app.goo.gl/YdbK77CGk1Q5PB9v7"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="font-body"
                     style={{
                       marginTop: "4px",
                       fontSize: "13px",
                       color: "rgba(255,255,255,0.3)",
                       lineHeight: 1.6,
+                      display: "block",
+                      textDecoration: "none",
+                      transition: "color 0.2s",
                     }}
+                    onMouseEnter={(e) =>
+                      ((e.currentTarget as HTMLAnchorElement).style.color =
+                        "rgba(255,255,255,0.6)")
+                    }
+                    onMouseLeave={(e) =>
+                      ((e.currentTarget as HTMLAnchorElement).style.color =
+                        "rgba(255,255,255,0.3)")
+                    }
                   >
-                    Kathmandu &amp; Lalitpur
-                  </p>
+                    📍 Lazimpad, Pizza Inn Building
+                  </a>
                 )}
               </div>
             </div>
